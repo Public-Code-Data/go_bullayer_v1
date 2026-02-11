@@ -17,10 +17,14 @@ type Config struct {
 
 	// 区块解析任务配置
 	BlockProcessor struct {
-		Enabled    bool  `json:"Enabled"`
-		BatchSize  int64 `json:"BatchSize"`
-		ParseTx    bool  `json:"ParseTx"`
-		ParseEvent bool  `json:"ParseEvent"`
+		Enabled         bool              `json:"Enabled"`
+		BatchSize       int64             `json:"BatchSize"`
+		ParseTx         bool              `json:"ParseTx"`
+		ParseEvent      bool              `json:"ParseEvent"`
+		ParseWorkers    int               `json:"ParseWorkers"`
+		TargetAddresses []string          `json:"TargetAddresses"`
+		TrackedAssets   []string          `json:"TrackedAssets"`
+		TokenContracts  map[string]string `json:"TokenContracts"`
 	} `json:"BlockProcessor"`
 
 	// 数据库配置（可选）

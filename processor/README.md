@@ -8,6 +8,7 @@
 processor/
 ├── cmd/                 # 程序入口
 ├── internal/
+│   ├── core/            # 核心解析能力（回执拉取、并发交易解析、过滤）
 │   ├── config/          # 配置定义
 │   ├── service/         # 处理服务
 │   └── processor/       # 处理任务实现
@@ -34,5 +35,5 @@ go run main.go -f ../etc/processor.yaml
 - `ProcessorEnabled`: 是否启用处理服务
 - `Interval`: 轮询间隔（秒）
 - `Chain`: 链相关配置（RPC、起始高度、确认数、单轮处理上限）
-- `BlockProcessor`: 区块解析配置（是否启用、解析项开关）
+- `BlockProcessor`: 区块解析配置（是否启用、解析项开关、并发数、目标地址、代币白名单）
 - `Database`: 数据库配置（可选，用于解析结果落库）

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"go_bullayer_v1/base/pkg/db"
+	"go_bullayer_v1/base/pkg/eth"
 	"go_bullayer_v1/base/pkg/logger"
 	"go_bullayer_v1/processor/internal/config"
 	"go_bullayer_v1/processor/internal/processor"
@@ -34,6 +35,7 @@ func NewProcessorService(ctx context.Context, cfg config.Config) *ProcessorServi
 		processors: make([]processor.Processor, 0),
 	}
 	svc.initDB()
+	svc.initETHClient()
 	return svc
 }
 
@@ -94,6 +96,14 @@ func (s *ProcessorService) initDB() {
 
 	s.db = database
 	logger.Info("数据库连接初始化成功")
+}
+
+func (s *ProcessorService) initETHClient() {
+	if err := eth.InitClient(s.config.Chain.RPCURL); err != nil {
+		logger.Error("ETH客户端初始化失败，将使用降级数据源: %v", err)
+		return
+	}
+	logger.Info("ETH客户端初始化成功")
 }
 
 // registerProcessors 注册所有处理任务

@@ -6,8 +6,10 @@ import (
 	"sync"
 	"time"
 
+	"go_bullayer_v1/base/pkg/eth"
 	"go_bullayer_v1/base/pkg/logger"
 	"go_bullayer_v1/processor/internal/config"
+	"go_bullayer_v1/processor/internal/core"
 )
 
 // BlockProcessor 区块处理任务
@@ -94,8 +96,15 @@ func (p *BlockProcessor) fetchLatestHeight(ctx context.Context) (int64, error) {
 	default:
 	}
 
-	// TODO: 这里替换为真实链节点 RPC 调用。
-	// 当前先使用递增模拟，确保模块初始化后可直接运行验证流程。
+	if eth.IsInitialized() {
+		latest, err := eth.LatestBlockNumber(ctx)
+		if err != nil {
+			return 0, err
+		}
+		return int64(latest), nil
+	}
+
+	// 降级路径：未初始化 ETH 客户端时使用本地模拟高度，保障流程可运行。
 	p.mu.Lock()
 	defer p.mu.Unlock()
 
@@ -114,7 +123,19 @@ func (p *BlockProcessor) parseBlock(ctx context.Context, height int64) error {
 	logger.Info("开始解析区块 %d", height)
 
 	if p.config.BlockProcessor.ParseTx {
-		logger.Info("解析区块 %d 交易数据", height)
+		receiptParser := core.NewReceiptParser()
+		incomingTransfers, err := receiptParser.ParseAndFilterByBlock(
+			ctx,
+			height,
+			p.config.BlockProcessor.TargetAddresses,
+			p.config.BlockProcessor.TrackedAssets,
+			p.config.BlockProcessor.TokenContracts,
+			p.config.BlockProcessor.ParseWorkers,
+		)
+		if err != nil {
+			return err
+		}
+		logger.Info("区块 %d 命中流入交易 %d 条", height, len(incomingTransfers))
 	}
 
 	if p.config.BlockProcessor.ParseEvent {
