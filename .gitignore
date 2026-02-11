@@ -1,0 +1,8 @@
+/target
+.idea/
+.vscode/
+src/target/
+
+
+*/cmd/logs/
+*/etc/
