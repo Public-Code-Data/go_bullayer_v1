@@ -7,4 +7,5 @@ use (
 	./api      // API服务模块
 	./task     // 后台任务模块
 	./gateway  // 网关服务模块
+	./processor // 链上数据处理模块
 )

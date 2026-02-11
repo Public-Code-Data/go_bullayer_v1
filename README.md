@@ -46,6 +46,15 @@ go_bullayer_v1/
 │   ├── etc/            # 配置文件
 │   └── go.mod          # 依赖 base 模块
 │
+├── processor/     # Processor模块 - 链上区块追踪和解析
+│   ├── cmd/            # 程序入口
+│   ├── internal/       # 内部代码
+│   │   ├── service/    # 处理服务
+│   │   ├── processor/  # 区块处理任务
+│   │   └── config/     # 配置定义
+│   ├── etc/            # 配置文件
+│   └── go.mod          # 依赖 base 模块
+│
 ├── go.work        # Go工作区文件，统一管理所有模块
 └── README.md      # 项目说明文档
 ```
@@ -84,6 +93,12 @@ go run main.go -f ../etc/task.yaml
 ```bash
 cd gateway/cmd
 go run main.go -f ../etc/gateway.yaml
+```
+
+#### 运行 Processor 服务
+```bash
+cd processor/cmd
+go run main.go -f ../etc/processor.yaml
 ```
 
 ## 📦 模块说明
@@ -156,6 +171,17 @@ import (
 - 基于熔断器模式的降级
 - 可配置的路由规则
 
+### Processor 模块
+
+**位置**: `processor/`
+
+**功能**:
+- 追踪链上区块高度
+- 按确认数处理安全区块
+- 解析区块交易和事件数据
+
+**依赖**: `base` 模块
+
 ## 🔧 开发指南
 
 ### 模块间依赖管理
@@ -182,6 +208,7 @@ replace go_bullayer_v1/base => ../base
 2. **API 模块**: 添加新的 API 接口
 3. **Task 模块**: 添加新的后台任务
 4. **Gateway 模块**: 添加新的路由规则
+5. **Processor 模块**: 添加新的链上解析逻辑
 
 ## 📝 代码规范
 
@@ -223,6 +250,10 @@ go build ./cmd
 # 构建 gateway 模块
 cd gateway
 go build ./cmd
+
+# 构建 processor 模块
+cd processor
+go build ./cmd
 ```
 
 ### 生产环境部署
@@ -234,11 +265,13 @@ go build ./cmd
 go build -o api-server ./api/cmd
 go build -o task-server ./task/cmd
 go build -o gateway-server ./gateway/cmd
+go build -o processor-server ./processor/cmd
 
 # 运行
 ./api-server -f api/etc/api.yaml
 ./task-server -f task/etc/task.yaml
 ./gateway-server -f gateway/etc/gateway.yaml
+./processor-server -f processor/etc/processor.yaml
 ```
 
 ## 🔍 与 Java Maven 对比
@@ -265,6 +298,7 @@ go build -o gateway-server ./gateway/cmd
 - [API 模块文档](./api/README.md)
 - [Task 模块文档](./task/README.md)
 - [Gateway 模块文档](./gateway/README.md)
+- [Processor 模块文档](./processor/README.md)
 
 ## 🤝 贡献指南
 

@@ -8,10 +8,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"go_bullayer_v1/task/internal/config"
-	"go_bullayer_v1/task/internal/service"
 	baseconfig "go_bullayer_v1/base/pkg/config"
 	"go_bullayer_v1/base/pkg/logger"
+	"go_bullayer_v1/task/internal/config"
+	"go_bullayer_v1/task/internal/service"
 )
 
 // configFile 配置文件路径参数
